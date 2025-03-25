@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {useUserStore} from "@/stores/user.ts";
-import {onMounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import {useUserBalanceRepository} from "@/api/repositories/transaction/userBalanceRepository.ts";
 import type {
   UserBalanceWithTransactionsResource
@@ -9,6 +9,7 @@ import type {
 const userStore = useUserStore()
 const { getBalance } = useUserBalanceRepository()
 const userBalance = ref<UserBalanceWithTransactionsResource | null>(null)
+let intervalId = null;
 
 const fetchBalance = async () => {
   userBalance.value = await getBalance()
@@ -16,7 +17,14 @@ const fetchBalance = async () => {
 
 onMounted(() => {
   fetchBalance()
+  intervalId = setInterval(fetchBalance, 5000);
 })
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
+});
 </script>
 
 <template>
