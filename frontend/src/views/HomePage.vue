@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import {useUserStore} from "@/stores/user.ts";
 
+const userStore = useUserStore()
 </script>
 
 <template>
   <main class="w-auto">
-    <h1 class="h3 mb-3 fw-normal">Добро пожаловать, Имя!</h1>
+    <h1 class="h3 mb-3 fw-normal">Добро пожаловать, {{ userStore.user?.name }}!</h1>
     <p class="mb-4">Ваш текущий баланс: $500.25</p>
     <div class="list-group">
       <div class="list-group-item list-group-item-action py-3">

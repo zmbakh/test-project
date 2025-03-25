@@ -1,18 +1,33 @@
 <script setup lang="ts">
 import {ref} from "vue";
+import {useUserRepository} from "@/api/repositories/user/userRepository.ts";
+import {useUserStore} from "@/stores/user.ts";
+import {useRouter} from "vue-router";
 
 const email = ref<string>('');
 const password = ref<string>('');
 
-const signIn = () => {
-  console.log(email.value, password.value);
+const {signIn} = useUserRepository()
+const userStore = useUserStore()
+const router = useRouter()
+
+const handleSignIn = async () => {
+  const loginData = await signIn(email.value, password.value)
+
+  if (!loginData) {
+    return
+  }
+
+  await userStore.userLogin(loginData)
+
+  await router.push({ name: 'home' })
 };
 </script>
 
 <template>
   <main>
     <div class="form-signin w-100 m-auto text-center">
-      <form @submit.prevent="signIn">
+      <form @submit.prevent="handleSignIn">
         <h1 class="h3 mb-3 fw-normal">Вход</h1>
 
         <div class="form-floating">
