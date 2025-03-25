@@ -52,7 +52,7 @@ class User extends Authenticatable
 
     public function userBalance(): HasOne
     {
-        return $this->hasOne(userBalance::class);
+        return $this->hasOne(UserBalance::class);
     }
 
     public function transactions(): HasMany

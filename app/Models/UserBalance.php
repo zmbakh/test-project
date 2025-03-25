@@ -11,6 +11,10 @@ class UserBalance extends Model
     /** @use HasFactory<\Database\Factories\UserBalanceFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'balance',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
