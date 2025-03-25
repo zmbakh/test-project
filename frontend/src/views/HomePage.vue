@@ -31,7 +31,9 @@ onMounted(() => {
             <p class="mb-2 opacity-75">{{ transaction.created_at }}</p>
             <p class="mb-0">{{ transaction.description }}</p>
           </div>
-          <small class="opacity-50 text-nowrap">${{ transaction.amount }}</small>
+          <small class="opacity-75 text-nowrap" :class=" transaction.type === 'credit' ? 'text-success' : 'text-danger'">
+            {{  transaction.type === 'credit' ? '+' : '-' }}${{ transaction.amount }}
+          </small>
         </div>
       </div>
     </div>
