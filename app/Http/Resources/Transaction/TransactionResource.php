@@ -21,7 +21,7 @@ class TransactionResource extends JsonResource
             'description' => $this->description,
             'balance_before' => $this->balance_before,
             'balance_after' => $this->balance_after,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->toDateTimeString(),
         ];
     }
 }

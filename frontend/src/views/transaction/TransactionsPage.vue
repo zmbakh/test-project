@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import { debounce } from 'lodash';
+import {useTransactionRepository} from "@/api/repositories/transaction/transactionRepository.ts";
+import type {TransactionResource} from "@/api/resources/TransactionResource.ts";
 
+const { list } = useTransactionRepository()
+
+const transactions = ref<TransactionResource[]>([])
 const description = ref<string>('')
-const sortOrder = ref<string>('asc')
+const sortOrder = ref<string>('desc')
 
-const search = () => {
-  console.log(description.value, sortOrder.value)
+const search = async() => {
+  transactions.value = await list(sortOrder.value, description.value)
 }
 
 const toggleSort = () => {
@@ -17,11 +22,18 @@ const toggleSort = () => {
 const onInput = debounce(() => {
   search()
 }, 500)
+
+onMounted(() => {
+  search()
+})
 </script>
 
 <template>
 <div class="container py-5">
-  <h3 class="mb-4">Список транзакции</h3>
+  <div class="d-flex justify-content-between align-items-baseline">
+    <h3 class="mb-4">Список транзакции</h3>
+    <RouterLink :to="{name: 'home'}" class="btn btn-primary">На главную</RouterLink>
+  </div>
   <div class="d-flex justify-content-end">
     <input v-model="description" @input="onInput" class="form-control search-input" type="text" placeholder="Поиск по описанию">
   </div>
@@ -40,29 +52,13 @@ const onInput = debounce(() => {
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Пополнение</td>
-      <td>+ $20.05</td>
-      <td>Описание данной операции</td>
-      <td>$120.05</td>
-      <td>2025-03-25 13:01:43</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Списание</td>
-      <td>- $100.00</td>
-      <td>Описание данной операции</td>
-      <td>$100.00</td>
-      <td>2025-03-25 13:01:43</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Списание</td>
-      <td>- $100.00</td>
-      <td>Описание данной операции</td>
-      <td>$200.00</td>
-      <td>2025-03-25 13:01:43</td>
+    <tr v-for="transaction in transactions" :key="transaction.id">
+      <th scope="row">{{ transaction.id }}</th>
+      <td>{{ transaction.type === 'credit' ? 'Пополнение' : 'Списание' }}</td>
+      <td :class="transaction.type === 'credit' ? 'text-success' : 'text-danger'">${{ transaction.amount }}</td>
+      <td>{{ transaction.description }}</td>
+      <td>${{ transaction.balance_after }}</td>
+      <td>{{ transaction.created_at }}</td>
     </tr>
     </tbody>
   </table>
