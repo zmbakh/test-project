@@ -10,7 +10,7 @@ class UserBalanceController extends Controller
 {
     public function balance(): UserBalanceWithTransactionsResource
     {
-        $balance = Auth::user()->userBalance();
+        $balance = Auth::user()->userBalance;
         $transactions = Auth::user()->transactions()->latest()->limit(5)->get();
 
         return new UserBalanceWithTransactionsResource([

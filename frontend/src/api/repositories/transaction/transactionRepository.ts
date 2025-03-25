@@ -1,5 +1,5 @@
 import {useHttpClient} from "@/api/client/useHttpClient.ts";
-import type {TransactionResource} from "@/api/resources/TransactionResource.ts";
+import type {TransactionResource} from "@/api/resources/transactionResource.ts";
 
 export function useTransactionRepository() {
   const { get } = useHttpClient()

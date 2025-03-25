@@ -2,7 +2,7 @@
 import {onMounted, ref} from "vue";
 import { debounce } from 'lodash';
 import {useTransactionRepository} from "@/api/repositories/transaction/transactionRepository.ts";
-import type {TransactionResource} from "@/api/resources/TransactionResource.ts";
+import type {TransactionResource} from "@/api/resources/transactionResource.ts";
 
 const { list } = useTransactionRepository()
 
